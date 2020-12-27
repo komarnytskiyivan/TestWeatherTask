@@ -1,9 +1,9 @@
 import './App.css';
-import ItemList from './components/ItemsList/ItemList'
+import WeatherList from './components/Weather/WeatherList/WeatherList'
 function App() {
   return (
     <div className="App">
-      <ItemList></ItemList>
+      <WeatherList/>
     </div>
   );
 }

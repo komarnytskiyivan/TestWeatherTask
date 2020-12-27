@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 const ButtonPaginator = styled.button`
 padding: 12px;
@@ -12,47 +12,55 @@ box-shadow: 0px 0px 30px rgba(256,256,256,.1);
 cursor: pointer;
   `
 function WeatherItem(props) {
-    const [currentRows, setCurrentRows] = useState([]);
-    useEffect(() => {
-        fetchData();
-      }, []);
-      const fetchData = async (needRows = 0) => {
+    const [currentRows, setCurrentRows] = useState({
+        rows: [],
+        currentRows: 0,
+        show:false
+    });
+      const fetchData = async (needRows = 0) => { // Fetch data from txt file
         try {
           const response = await fetch(
             `https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/${props.city}data.txt`
           );
           const data = await response.text();
           let rowsText = data.split('\n');
-          rowsText.length = needRows
-          console.log(rowsText)
+          needRows < 0 ? rowsText.length = 0 : rowsText.length = needRows;
           setCurrentRows({
               rows: rowsText,
               currentRows: rowsText.length,
               show: rowsText.length == 0 ? false : true
             })
-            console.log(currentRows)
         } catch (error) {
           console.log(error.message);
         }
-        console.log(currentRows.currentRows)
       };
     function AddRows(){
-        fetchData(currentRows.currentRows + 10)
+        fetchData(currentRows.currentRows + 10);
     }
     function DeleteRows(){
-        fetchData(currentRows.currentRows - 10)
+        fetchData(currentRows.currentRows - 10);
     }
     return (
-        <div>
-        {currentRows.show == true ?
+      <tr>
+        <td>
+          {currentRows.show ?
             currentRows.rows.map((datumn, index) => {
-            return (
+              return (
                 <p key={index} >{datumn}</p>
-            );
-        }) : <div>{props.city.charAt(0).toUpperCase() + props.city.slice(1)}</div>}
-        <ButtonPaginator onClick={() => AddRows()}>Show more!</ButtonPaginator>
-        <ButtonPaginator onClick={() => DeleteRows()}>Show less!</ButtonPaginator>
-        </div>
+              );
+            }) : <div>{props.city.charAt(0).toUpperCase() + props.city.slice(1)}</div>}
+          <ButtonPaginator onClick={() => AddRows()}>Show more!</ButtonPaginator>
+          <ButtonPaginator onClick={() => DeleteRows()}>Show less!</ButtonPaginator>
+        </td>
+        <td>{props.format}
+        </td>
+        <td>
+          {props.date}
+        </td>
+        <td>
+          <span>{props.preview}</span>
+        </td>
+      </tr>
     )
 }
 
