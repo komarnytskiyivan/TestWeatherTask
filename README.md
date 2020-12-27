@@ -1,4 +1,4 @@
-# PokemonApi
+# Weather
 Test task.
 
 ## Instalation
